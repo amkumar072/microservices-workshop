@@ -1,0 +1,16 @@
+{
+    "transactions": [
+        {
+            "id": "1",
+            "category": "music",
+            "date": "10-11-2018",
+            "amount": 250
+        },
+        {
+            "id": "2",
+            "category": "film",
+            "date": "08-02-2018",
+            "amount": 50
+        }
+    ]
+}
