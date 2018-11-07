@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
-import Sort from './Sort';
-import Test from './Test';
+/* import Sort from './Sort'; */
 
 class App extends Component {
   constructor(props) {
@@ -11,17 +10,19 @@ class App extends Component {
     this.state = {
       transactions: [],
       formDate: '',
-      toDate: ''
+      toDate: '',
+      filter: '',
+      transaction: {}
     }
   }
 
   componentWillMount() {
-    axios({
+    /* axios({
       url: "http://localhost:3001/transactions",
       method: "get"
     })
       .then(transactions => {
-      //  console.log(transactions.data.data);
+        //  console.log(transactions.data.data);
 
         this.setState({
           transactions: transactions.data.data.transactions
@@ -29,7 +30,17 @@ class App extends Component {
       })
       .catch(error => {
 
+      }) */
+
+      this.setState({
+        transaction: {
+          category: "milkyBar",
+          date: Date.now(),
+          amount: 158
+        }
       })
+
+    this.onClick();
   }
 
   onSort = () => {
@@ -40,13 +51,15 @@ class App extends Component {
     })
   }
 
+
+
   onSortNode = () => {
     axios({
       url: "http://localhost:3001/transactions/sort",
       method: "get"
     })
       .then(transactions => {
-     //   console.log(transactions.data.data);
+        //   console.log(transactions.data.data);
 
         this.setState({
           transactions: transactions.data.data.transactions
@@ -58,7 +71,7 @@ class App extends Component {
   }
 
   onClick = () => {
-    /* axios({
+    axios({
       url: "http://localhost:3001/transactions",
       method: "get"
     })
@@ -71,7 +84,7 @@ class App extends Component {
       })
       .catch(error => {
 
-      }) */
+      })
   }
 
 
@@ -81,7 +94,7 @@ class App extends Component {
       method: "get"
     })
       .then(transactions => {
-      //  console.log(transactions.data.data);
+        //  console.log(transactions.data.data);
 
         this.setState({
           transactions: transactions.data.data.transactions
@@ -91,7 +104,7 @@ class App extends Component {
 
       })
 
- //   console.log(this.state.transaction);
+    //   console.log(this.state.transaction);
   }
   onFromDate = (e) => {
 
@@ -110,10 +123,45 @@ class App extends Component {
     //  console.log(this.state.toDate)
   }
 
+  handlefilter = (e) => {
+    this.onClick();
+    this.setState({
+      filter: e.target.value
+    });
+  }
+
+  onFilter = () => {
+    //console.log(e.target.value);
+
+    let { transactions, filter } = this.state;
+    let result = transactions.filter((value) => {
+      if (value.id === filter) {
+        return value;
+      } else {
+        return null
+      }
+    });
+    this.setState({
+      transactions: result
+    })
+    //   console.log(result)
+  }
+
+  onAdd = () => {
+  
+
+    axios({
+      url: 'http://localhost:3001/transactions',
+      method: 'post',
+      data: this.state.transaction
+    })
+  }
 
   render() {
     return (
       <div className="App">
+        <button onClick={this.onAdd}> Add </button>
+
         <button onClick={this.onClick}>Click</button>
         {/*  <button onClick={this.onSort}>Sort</button>
         {
@@ -132,30 +180,36 @@ class App extends Component {
 
         <hr />
         {/*  <Sort transactions={this.state.transactions} onClick={this.onSort} /> */}
-        <Sort transactions={this.state.transactions} onClick={this.onSortNode} />
+        {/*  <Sort transactions={this.state.transactions} onClick={this.onSortNode} /> */}
 
-<table>
-            <tr> 
-            <th> id </th>   
-             <th> name </th> 
-              <th> amount </th>   
-            </tr>
-            
-        {
-          this.state.transaction.map((trans,i)=>{
-            return (
-            <tr key={i}>
-            <td> {trans.id}</td>
-            <td> {trans.name}</td>
-              <td> {trans.amount}</td>
-            </tr>
-            )
-          })
-        }
-        
-           </table>
+        <input onChange={this.handlefilter} /> &nbsp;
+        <button onClick={() => this.onFilter()}> Filter </button>
 
-{/* <Test /> */}
+        <table>
+          <tbody>
+            <tr>
+              <th> id </th>
+              <th> category </th>
+              <th> amount </th>
+            </tr>
+
+            {
+              this.state.transactions.map((trans, i) => {
+                return (
+                  <tr key={i}>
+                    <td> {trans.id}</td>
+                    <td> {trans.category}</td>
+                    <td> {trans.amount}</td>
+                  </tr>
+                )
+              })
+            }
+          </tbody>
+        </table>
+
+        {/* <Test /> */}
+
+
       </div>
     );
   }

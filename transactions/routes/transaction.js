@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
+var uuidv1 = require('uuid/v1');
 
 
 const transactions = [
@@ -75,14 +76,14 @@ router.get('/', (req, res) => {
         }
         else {
             if (req.query.formDate != null) {
-                var transactionsLocal = JSON.parse(data.toString())
+                var transactionsLocal = JSON.parse(data)
                 //  console.log(transactions);
 
-                transactionsLocal.transactions.forEach(transaction => {
+                transactionsLocal.transactions.map(transaction => {
                     //   console.log(transaction);
                     if (Date.parse(transaction.date) >= Date.parse(req.query.formDate) &&
                         Date.parse(transaction.date) <= Date.parse(req.query.toDate)) {
-                        console.log(transaction);
+                        //   console.log(transaction);
 
                         isTransactionAvailable = true;
                         transactions.push(transaction)
@@ -146,45 +147,76 @@ router.get('/sort', function (req, res, next) {
     var inputQuery = req.query.name;
     console.log(inputQuery)
     fs.readFile("./data/transaction.json", (err, data) => {
-      if (err) {
-        res.status(500).send({
-          message: 'fail',
-          error: err
-        })
-  
-      }
-      else {
-        var transactions = JSON.parse(data);
-        transactions.transaction.map(trans => {
-          console.log(Object.keys(trans))
-          Object.keys(trans).map(x => {
-            if (x === inputQuery) {
-              transactions.transaction.sort((x, y) => y[inputQuery] - x[inputQuery])
-  
-  
-              isQueryFind = true;
-            }
-          })
-  
-  
-        })
-        if (!isQueryFind) {
-          res.status(500).send({
-            message: 'fail',
-            error: 'error while fetchin'
-          })
-  
+        if (err) {
+            res.status(500).send({
+                message: 'fail',
+                error: err
+            })
+
         }
         else {
-          res.status(200).send({
-            message: 'success',
-            data: transactions
-          });
+            var transactions = JSON.parse(data);
+            transactions.transaction.map(trans => {
+                console.log(Object.keys(trans))
+                Object.keys(trans).map(x => {
+                    if (x === inputQuery) {
+                        transactions.transaction.sort((x, y) => y[inputQuery] - x[inputQuery])
+
+
+                        isQueryFind = true;
+                    }
+                })
+
+
+            })
+            if (!isQueryFind) {
+                res.status(500).send({
+                    message: 'fail',
+                    error: 'error while fetchin'
+                })
+
+            }
+            else {
+                res.status(200).send({
+                    message: 'success',
+                    data: transactions
+                });
+            }
+
         }
-  
-      }
     })
-  });
-  
+});
+
+
+
+router.post('/', (req, res) => {
+    fs.readFile('./data/transactions.json', (err, data) => {
+        if (err) {
+            res.status(400).send({
+                message: 'Fail',
+                error: err
+            })
+        }
+        else {
+            var transactions = JSON.parse(data)
+            console.log(req.body)
+            var transaction = {
+                id: uuidv1(),
+                category: req.body.category,
+                date: req.body.date,
+                amount: req.body.amount
+            }
+            transactions.transactions.push(transaction)
+            let result= JSON.stringify(transactions)
+            fs.writeFileSync('./data/transactions.json', result)
+            console.log(transactions)
+            res.status(200).send({
+                message: 'Success',
+                data: transactions
+            })
+        }
+    })
+})
+
 
 module.exports = router;

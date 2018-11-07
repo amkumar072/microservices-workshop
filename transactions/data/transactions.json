@@ -1,16 +1,1 @@
-{
-    "transactions": [
-        {
-            "id": "1",
-            "category": "music",
-            "date": "10-11-2018",
-            "amount": 250
-        },
-        {
-            "id": "2",
-            "category": "film",
-            "date": "08-02-2018",
-            "amount": 50
-        }
-    ]
-}
+{"transactions":[{"id":"1","category":"music","date":"10-11-2018","amount":250},{"id":"2","category":"film","date":"08-02-2018","amount":50},{"id":"393fa570-e29f-11e8-ba40-cb0c25c60b0c","category":"milkyBar","date":1541603385522,"amount":158}]}
