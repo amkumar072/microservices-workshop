@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
-import Sort from './Sort'
+import Sort from './Sort';
+import Test from './Test';
 
 class App extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       transactions: [],
       formDate: '',
@@ -132,7 +134,28 @@ class App extends Component {
         {/*  <Sort transactions={this.state.transactions} onClick={this.onSort} /> */}
         <Sort transactions={this.state.transactions} onClick={this.onSortNode} />
 
+<table>
+            <tr> 
+            <th> id </th>   
+             <th> name </th> 
+              <th> amount </th>   
+            </tr>
+            
+        {
+          this.state.transaction.map((trans,i)=>{
+            return (
+            <tr key={i}>
+            <td> {trans.id}</td>
+            <td> {trans.name}</td>
+              <td> {trans.amount}</td>
+            </tr>
+            )
+          })
+        }
+        
+           </table>
 
+{/* <Test /> */}
       </div>
     );
   }

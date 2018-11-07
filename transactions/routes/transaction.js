@@ -139,4 +139,52 @@ router.get('/sort', (req, res) => {
     })
 })
 
+
+router.get('/sort', function (req, res, next) {
+
+    var isQueryFind = false;
+    var inputQuery = req.query.name;
+    console.log(inputQuery)
+    fs.readFile("./data/transaction.json", (err, data) => {
+      if (err) {
+        res.status(500).send({
+          message: 'fail',
+          error: err
+        })
+  
+      }
+      else {
+        var transactions = JSON.parse(data);
+        transactions.transaction.map(trans => {
+          console.log(Object.keys(trans))
+          Object.keys(trans).map(x => {
+            if (x === inputQuery) {
+              transactions.transaction.sort((x, y) => y[inputQuery] - x[inputQuery])
+  
+  
+              isQueryFind = true;
+            }
+          })
+  
+  
+        })
+        if (!isQueryFind) {
+          res.status(500).send({
+            message: 'fail',
+            error: 'error while fetchin'
+          })
+  
+        }
+        else {
+          res.status(200).send({
+            message: 'success',
+            data: transactions
+          });
+        }
+  
+      }
+    })
+  });
+  
+
 module.exports = router;
