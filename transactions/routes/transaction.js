@@ -61,9 +61,30 @@ const transactions = [
     })
 }) */
 
+flatter = (input) => ((prev, curr) => {
+    return prev.concat(curr);
+});
+
+
 router.get('/', (req, res) => {
     //  console.log(req.query);
     // console.log(req.params)
+
+    var input = [[1], [2, [3, [4]]], 5, [6, [7]]];
+    // console.log(input.length)
+    for (let i = 1; i < input.length; i++) {
+        input = ([].concat(...input));
+    }
+    console.log(input)
+ 
+
+       var object = { 0: [1, 2, 3, 4] }
+      result = Object.keys(object).reduce(function (r, k) {
+          return r.concat(k, object[k]);
+      }, []);
+  
+      console.log(result); 
+
 
     let isTransactionAvailable = false;
     let transactions = [];
@@ -207,7 +228,7 @@ router.post('/', (req, res) => {
                 amount: req.body.amount
             }
             transactions.transactions.push(transaction)
-            let result= JSON.stringify(transactions)
+            let result = JSON.stringify(transactions)
             fs.writeFileSync('./data/transactions.json', result)
             console.log(transactions)
             res.status(200).send({

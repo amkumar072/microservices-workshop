@@ -130,6 +130,21 @@ class App extends Component {
     });
   }
 
+  onClickAverage=()=>{
+    let { weather} = this.state;
+   let avgWetherResult= weather.reduce((acc,val)=>{
+   //  console.log( parseInt(acc)+'--'+ parseInt(val.id))
+      return parseInt(acc)+ parseInt(val.id)
+    },0)
+    
+  avgWetherResult=  avgWetherResult/weather.length
+    console.log(avgWetherResult)
+    
+    this.setState({
+      avgWetherResult
+    })
+  }
+
   onFilter = () => {
     //console.log(e.target.value);
 
